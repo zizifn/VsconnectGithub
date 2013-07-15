@@ -7,7 +7,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
-
+    <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}" Loaded="Grid_Loaded">
+        <TextBox Name="PhoneNumber"  HorizontalAlignment="Left" Margin="382,113,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="349" Height="36"/>
+        <Button Content="确定" HorizontalAlignment="Left" Margin="765,113,0,0" VerticalAlignment="Top" Click="Button_Click"/>
+        <TextBlock HorizontalAlignment="Left" Margin="293,115,0,0" TextWrapping="Wrap" Text="输入号码" VerticalAlignment="Top" Height="36" Width="65" FontFamily="Segoe UI" FontSize="14"/>
+        <TextBox Name="PhoneLocation" HorizontalAlignment="Left" Margin="382,201,0,0" TextWrapping="Wrap" Text="{Binding PhoneLocation}" VerticalAlignment="Top" Height="44" Width="349" Loaded="PhoneLocation_Loaded"/>
     </Grid>
 </Page>

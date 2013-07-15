@@ -11,6 +11,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows8SelectPhone.Libary;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -21,9 +22,12 @@ namespace Windows8SelectPhone
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        Phone phone=new Phone();
         public MainPage()
         {
             this.InitializeComponent();
+       
+          
         }
 
         /// <summary>
@@ -33,6 +37,24 @@ namespace Windows8SelectPhone
         /// 属性通常用于配置页。</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            phone.PhoneNumber = "1234";
+                 DataContext = phone;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            string phonenumber = phone.PhoneNumber;
+            this.PhoneLocation.Text = phonenumber + "位置";
+        }
+
+        private void PhoneLocation_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Grid_Loaded(object sender, RoutedEventArgs e)
+        {
+           
         }
     }
 }
