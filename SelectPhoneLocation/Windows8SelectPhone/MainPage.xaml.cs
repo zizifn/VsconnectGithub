@@ -37,8 +37,10 @@ namespace Windows8SelectPhone
         /// 属性通常用于配置页。</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            phone.PhoneNumber = "1234";
-                 DataContext = phone;
+            if (e.NavigationMode == NavigationMode.New)
+            {
+               this.DataContext = phone;
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -55,6 +57,14 @@ namespace Windows8SelectPhone
         private void Grid_Loaded(object sender, RoutedEventArgs e)
         {
            
+        }
+
+        private void PhoneNumber_TextChanged(object sender, TextChangedEventArgs e)
+        {
+           
+                if (int.Parse(PhoneNumber.Text.ToString() )> 10)
+                    PhoneLocation.Text = PhoneNumber.Text + "位置";
+            
         }
     }
 }
