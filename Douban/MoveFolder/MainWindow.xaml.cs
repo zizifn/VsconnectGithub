@@ -61,6 +61,28 @@ namespace MoveFolder
             string a = @"I:\Users\jamesyang\Desktop\F1\XML";
             return a;
         }
+        
+        private void Clipboard()
+        {
+             DirectoryInfo dir = new DirectoryInfo(@"I:\Users\jamesyang\Desktop\F1\XML");
+             StringCollection ss = new StringCollection();
+             ss.Add(dir.FullName);
+             //FileInfo[] files = dir.GetFiles();
+             //foreach (FileInfo file in files)
+             //{
+             //    string temppath = System.IO.Path.Combine(@"I:\Users\jamesyang\Desktop\F1\XML", file.Name);
+             //    ss.Add(temppath);
+             //}
+
+             Clipboard.SetFileDropList(ss);
+             StringCollection s = Clipboard.GetFileDropList();
+             foreach (var i in s)
+             {
+                 MessageBox.Show(i.ToString());
+             }
+            //Clipboard.SetData(DataFormats.Text, "put thing in clipboard");
+            //MessageBox.Show(Clipboard.GetData(DataFormats.UnicodeText).ToString());
+        }
 
         private static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
         {
