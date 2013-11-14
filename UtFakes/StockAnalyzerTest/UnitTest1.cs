@@ -1,9 +1,13 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VS.UTFakes;
+using Microsoft.QualityTools.Testing.Fakes;
 
 namespace StockAnalyzerTest
 {
+    /// <summary>
+    /// stubs inject interface
+    /// </summary>
     [TestClass]
     public class UnitTest1
     {
@@ -18,8 +22,9 @@ namespace StockAnalyzerTest
                  {
                      // Define each method:
                      // Name is original name + parameter types:
-                     GetSharePriceString = (company) => { return 1234; }
+                     GetSharePriceString = (s) => { return 1234; }
                  };
+            //easy to unstood,
 
             // In the completed application, stockFeed would be a real one:
             var componentUnderTest = new StockAnalyzer(stockFeed);
@@ -29,6 +34,31 @@ namespace StockAnalyzerTest
 
             // Assert:http://msdn.microsoft.com/en-us/library/hh549174.aspx
             Assert.AreEqual(1234, actualValue);
+        }
+
+        /// <summary>
+        /// Shim
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void TestCurrentYear()
+        {
+            using (ShimsContext.Create())
+            {
+                System.Fakes.ShimDateTime.NowGet = () => { return new DateTime(1991, 1, 1); };
+                componentUnderTest s = new componentUnderTest();
+                Assert.AreEqual(1991, s.GetTheCurrentYear());
+
+                System.Fakes.ShimDateTime.NowGet = () => { return new DateTime(2000, 1, 1); };
+              //  Y2KChecker.Check();
+
+                VS.UTFakes.Fakes.ShimY2KChecker.return5=()=>{return 3;};
+                Assert.AreEqual(3, Y2KChecker.return5());
+
+                componentUnderTest s1 = new componentUnderTest();
+                VS.UTFakes.Fakes.ShimcomponentUnderTest.AllInstances.GetTheCurrentYear = (componentUnderTest) => { return 1; };
+                Assert.AreEqual(1,s1.GetTheCurrentYear());
+            }
         }
 
     }
