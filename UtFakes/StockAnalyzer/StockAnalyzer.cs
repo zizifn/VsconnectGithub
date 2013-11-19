@@ -72,6 +72,11 @@ namespace VS.UTFakes
     /// </summary>
     public static class Y2KChecker
     {
+        public static int a {get;set; }
+        static Y2KChecker()
+        {
+            a = 2;
+        }
         public static void Check()
         {
             if (DateTime.Now == new DateTime(2000, 1, 1))
@@ -82,16 +87,37 @@ namespace VS.UTFakes
         {
             return 5;
         }
+
+        public static int returnA()
+        {
+            return a;
+        }
     }
 
     public class ClassMethod
     {
+        public int Value { set; get; }
+        public ClassMethod(int value)
+        {
+            this.Value = value;
+        }
         public int return1 { set; get; }
 
         public string returnClassMethodName()
         {
             return "ClassMethod";
         }
+    }
+
+    public abstract class MyBase
+    {
+        public int MyMethod() {
+            return 1;
+    }
+    }
+
+    public class MyChild : MyBase
+    {
     }
 
 }
