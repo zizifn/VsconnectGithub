@@ -2,6 +2,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VS.UTFakes;
 using Microsoft.QualityTools.Testing.Fakes;
+using System.Collections.Generic;
+using System.IO;
 
 namespace StockAnalyzer.Test
 {
@@ -71,9 +73,9 @@ stockFeed.GetValueOf1<int>(() => { return 5; });
                 VS.UTFakes.Fakes.ShimY2KChecker.StaticConstructor = () => {
                     VS.UTFakes.Fakes.ShimY2KChecker.aGet = () => { return 5; };
                 };
-                Assert.AreEqual(5, Y2KChecker.returnA());
-
                 Assert.AreEqual(2, Y2KChecker.returnA());
+
+               // Assert.AreEqual(2, Y2KChecker.returnA());
 
 // Fake 类的一个方法。 For all Instance just like static class
                 componentUnderTest s1 = new componentUnderTest();
@@ -90,6 +92,7 @@ stockFeed.GetValueOf1<int>(() => { return 5; });
                 ClassMethod ClassMethod2 = new VS.UTFakes.Fakes.ShimClassMethod()
                 {
                     returnClassMethodName = () => { return "ClassMethod2"; },
+                    returnClassPrivateMethodName = () => { return "private"; },
 
                 };
                 //doing here,you need cast ShimClassMethod to ClassMethod easy to do it.
@@ -97,19 +100,22 @@ stockFeed.GetValueOf1<int>(() => { return 5; });
                 //mayne you put F12 see Definition of ShimClassMethod
                 Assert.AreEqual("ClassMethod1", ClassMethod1.Instance.returnClassMethodName());
                 Assert.AreEqual("ClassMethod2", ClassMethod2.returnClassMethodName());
+                VS.UTFakes.UseClassMethod useClassMethod = new UseClassMethod();
+                VS.UTFakes.Fakes.ShimClassMethod.AllInstances.returnClassPrivateMethodName = (ClassMethod) => { return "private"; };
+                Assert.AreEqual("private", useClassMethod.GetTestreturnClassPrivateMethodName());
 
                 //To be continue http://msdn.microsoft.com/en-us/library/hh549176.aspx
                 
 // Constructors Unit Test 
-                ClassMethod ClassMethod3=new ClassMethod(3);
+               
                 VS.UTFakes.Fakes.ShimClassMethod.ConstructorInt32 = (ClassMethod, value) =>
                 {
                     var shim = new VS.UTFakes.Fakes.ShimClassMethod(ClassMethod)
                     {
-                        ValueGet = () => { return -5; }
+                        ValueGet = () => { return -5;},
                     };
                 };
-               
+                ClassMethod ClassMethod3 = new ClassMethod(3);
                 new VS.UTFakes.Fakes.ShimClassMethod(ClassMethod3);
                 Assert.AreEqual(-5, ClassMethod3.Value);
 
@@ -117,7 +123,28 @@ stockFeed.GetValueOf1<int>(() => { return 5; });
                 var child = new VS.UTFakes.Fakes.ShimMyChild();
                 var mybase=new VS.UTFakes.Fakes.ShimMyBase(child) { MyMethod = () => { return 5; } };
                 Assert.AreEqual(5, mybase.Instance.MyMethod());
+
+// binding interface,和StubIStockFeed作用一样了。
+                var myenumerable = new VS.UTFakes.Fakes.ShimMyEnumerable();
+                myenumerable.Bind(new List<int> { 1, 2, 3 });
+                var test=myenumerable.Instance.GetEnumerator();
+
+// use origin
+                System.IO.Fakes.ShimFile.WriteAllTextStringString = (fileName, content) =>
+                {
+                    ShimsContext.ExecuteWithoutShims(() =>
+                    {
+
+                        Console.WriteLine("enter");
+                        File.WriteAllText(fileName, content);
+                        Console.WriteLine("leave");
+                    });
+                };
+
+
             }
+
+         
         }
 
     }

@@ -96,6 +96,7 @@ namespace VS.UTFakes
 
     public class ClassMethod
     {
+
         public int Value { set; get; }
         public ClassMethod(int value)
         {
@@ -106,6 +107,27 @@ namespace VS.UTFakes
         public string returnClassMethodName()
         {
             return "ClassMethod";
+        }
+        private string returnClassPrivateMethodName()
+        {
+            return "ClassMethod";
+        }
+        public string TestreturnClassPrivateMethodName()
+        {
+            return this.returnClassPrivateMethodName();
+        }
+        public string ClassPrivateMethodName()
+        {
+            return "Test";
+        }
+    }
+
+    public class UseClassMethod
+    {
+        ClassMethod clas=new ClassMethod(1);
+        public string GetTestreturnClassPrivateMethodName()
+        {
+            return clas.TestreturnClassPrivateMethodName();
         }
     }
 
@@ -119,5 +141,24 @@ namespace VS.UTFakes
     public class MyChild : MyBase
     {
     }
+    
+    public class MyEnumerable : IEnumerable<int>
+    {
+
+        public IEnumerator<int> GetEnumerator()
+        {
+            List<int> i=new List<int>();
+            return i as IEnumerator<int>;
+        }
+
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            List<int> i = new List<int>();
+            return i as IEnumerator<int>;
+        }
+    }
+
+
 
 }
