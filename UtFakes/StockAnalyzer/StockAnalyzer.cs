@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -156,6 +157,14 @@ namespace VS.UTFakes
         {
             List<int> i = new List<int>();
             return i as IEnumerator<int>;
+        }
+    }
+
+    public class TestOrginMethod
+    {
+        public void CallWriteAllTextMethod()
+        {
+            File.WriteAllText(@"D:\1.txt", "TestCallSystemMethod");
         }
     }
 

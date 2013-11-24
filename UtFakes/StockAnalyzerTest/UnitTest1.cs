@@ -4,6 +4,8 @@ using VS.UTFakes;
 using Microsoft.QualityTools.Testing.Fakes;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Fakes;
+using VS.UTFakes.Fakes;
 
 namespace StockAnalyzer.Test
 {
@@ -97,7 +99,7 @@ stockFeed.GetValueOf1<int>(() => { return 5; });
                 };
                 //doing here,you need cast ShimClassMethod to ClassMethod easy to do it.
                 //maybe you will wonder why ShimClassMethod can cast ClassMethod,beacuse i can tell you!PS:i donot know.
-                //mayne you put F12 see Definition of ShimClassMethod
+                //maybe you put F12 see Definition of ShimClassMethod
                 Assert.AreEqual("ClassMethod1", ClassMethod1.Instance.returnClassMethodName());
                 Assert.AreEqual("ClassMethod2", ClassMethod2.returnClassMethodName());
                 VS.UTFakes.UseClassMethod useClassMethod = new UseClassMethod();
@@ -130,22 +132,58 @@ stockFeed.GetValueOf1<int>(() => { return 5; });
                 var test=myenumerable.Instance.GetEnumerator();
 
 // use origin
-                System.IO.Fakes.ShimFile.WriteAllTextStringString = (fileName, content) =>
-                {
-                    ShimsContext.ExecuteWithoutShims(() =>
-                    {
+                // Fake File clss
+                //System.IO.Fakes.ShimFile.WriteAllTextStringString = (fileName, content) =>
+                //{
+                //    ShimsContext.ExecuteWithoutShims(() =>
+                //    {
 
-                        Console.WriteLine("enter");
-                        File.WriteAllText(fileName, content);
-                        Console.WriteLine("leave");
-                    });
+                //        Console.WriteLine("enter");
+                //        File.WriteAllText(fileName, content);
+                //        Console.WriteLine("leave");
+                //    });
+                //};
+
+                int i = 0;
+                TestOrginMethod TestCallOrgin = new TestOrginMethod();
+
+                // unit test code
+                Microsoft.QualityTools.Testing.Fakes.FakesDelegates.Action<string, string> shim1 = null;
+                shim1 = (fileName, content) => {
+                  try {
+                    Console.WriteLine("enter");
+                    // remove shim in order to call original method
+                    ShimFile.WriteAllTextStringString = null;
+                    i++;
+                    File.WriteAllText(fileName, content + i.ToString());
+                    //Console
+                  }
+                  finally
+                  {
+                    // restore shim
+                      // 死循环了了，验证是
+                     // ShimFile.WriteAllTextStringString = (sFileName, sContent) => { File.AppendAllLines(@"D:\Test\1.txt",new string[]{i++.ToString()}); TestCallOrgin.CallWriteAllTextMethod(); };
+                      ShimFile.WriteAllTextStringString = (sFileName, sContent) => { i++; };
+                   
+                      Console.WriteLine("leave");
+                  }
                 };
+                // initialize the shim
+                ShimFile.WriteAllTextStringString = shim1;
 
+                TestCallOrgin.CallWriteAllTextMethod();
+                TestCallOrgin.CallWriteAllTextMethod();    
 
-            }
-
-         
+            }         
         }
 
+        [TestMethod]
+        public void TestConsole()
+        { 
+            //既然用到了，i++,++i，在这里阐述下什么是左值和右值。
+            //理论上，任何值都存在内存中，理论上你可以操作他们，改变他们。但这仅仅是理论上
+
+            //任何一个变量都有
+        }
     }
 }
